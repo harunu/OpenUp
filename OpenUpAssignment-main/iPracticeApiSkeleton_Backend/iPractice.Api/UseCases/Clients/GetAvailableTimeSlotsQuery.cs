@@ -18,8 +18,12 @@ public class GetAvailableTimeSlotsHandler(IClientSqlRepository clientSqlReposito
     public async Task<List<AvailableTimeSlotsResult>> Handle(GetAvailableTimeSlotsQuery request, CancellationToken cancellationToken)
     {
         var client = await clientSqlRepository.GetClientByIdAsync(request.ClientId, cancellationToken);
-        var psychologistIds = client.GetPsychologists();
+        if (client == null)
+        {
+            throw new InvalidOperationException($"Client with ID {request.ClientId} not found.");
+        }
 
+        var psychologistIds = client.GetPsychologists();
         var psychologists = await psychologistSqlRepository.GetPsychologistsByIdsAsync(psychologistIds, cancellationToken);
 
         var result = new List<AvailableTimeSlotsResult>();
@@ -27,14 +31,12 @@ public class GetAvailableTimeSlotsHandler(IClientSqlRepository clientSqlReposito
         foreach (var psychologist in psychologists)
         {
             var availableTimeSlots = psychologist.GetAvailableTimeSlotsFrom(DateTime.UtcNow);
-
-            if (availableTimeSlots.Count == 0)
+            if (availableTimeSlots == null || !availableTimeSlots.Any())
+            {
                 continue;
+            }
 
-            var timeRanges = availableTimeSlots
-                .Select(x => (TimeRange)x)
-                .ToList();
-
+            var timeRanges = availableTimeSlots.Select(x => (TimeRange)x).ToList();
             result.Add(new(psychologist.Id, timeRanges));
         }
 

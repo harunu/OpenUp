@@ -22,7 +22,7 @@ public class UpdateAvailableTimeSlotHandler(IPsychologistSqlRepository psycholog
         var psychologist = await psychologistSqlRepository.GetPsychologistByIdAsync(request.PsychologistId, cancellationToken);
 
         psychologist.CancelAvailableTimeSlot(request.ExistingAvailableTimeSlotId);
-        psychologist.AddAvailableTimeSlot(new(request.From, request.To));
+        psychologist.AddAvailableTimeSlot(new(request.From, request.To, psychologist.Id));
 
         await psychologistSqlRepository.SaveChangesAsync(cancellationToken);
 

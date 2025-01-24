@@ -1,4 +1,5 @@
-﻿using iPractice.Api.Controllers.Psychologists.Dtos;
+﻿using System.Collections.Generic;
+using iPractice.Api.Controllers.Psychologists.Dtos;
 using iPractice.Api.UseCases.Psychologists;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,18 @@ namespace iPractice.Api.Controllers.Psychologists;
 [Route("[controller]")]
 public class PsychologistController(IMediator mediator) : ControllerBase
 {
+    
+    /// <summary>
+    /// Gets all psychologist IDs.
+    /// </summary>
+    /// <returns>List of psychologist IDs</returns>
+    [HttpGet("ids")]
+    public async Task<ActionResult<List<long>>> GetAllPsychologistIds()
+    {
+        var psychologistIds = await mediator.Send(new GetAllPsychologistIdsQuery());
+        return Ok(psychologistIds);
+    }
+    
     /// <summary>
     /// Creates a new psychologist.
     /// </summary>
@@ -74,4 +87,18 @@ public class PsychologistController(IMediator mediator) : ControllerBase
         var psychologist = await mediator.Send(new UpdateAvailableTimeSlotCommand(id, timeSlotId, updatedTimes.From, updatedTimes.To));
         return Ok(PsychologistDetailsDto.From(psychologist));
     }
+    
+    /// <summary>
+    /// Deletes an existing available timeslot for a psychologist
+    /// </summary>
+    /// <param name="id">The psychologist's ID.</param>
+    /// <param name="timeSlotId">The timeslot ID to delete.</param>
+    /// <returns>The profile of the psychologist</returns>
+    [HttpDelete("{id}/available-timeslots/{timeSlotId}")]
+    public async Task<ActionResult<PsychologistDetailsDto>> DeleteAvailableTimeSlot([FromRoute] long id, [FromRoute] string timeSlotId)
+    {
+        var psychologist = await mediator.Send(new DeleteAvailableTimeSlotCommand(id, timeSlotId));
+        return Ok(PsychologistDetailsDto.From(psychologist));
+    }
+    
 }

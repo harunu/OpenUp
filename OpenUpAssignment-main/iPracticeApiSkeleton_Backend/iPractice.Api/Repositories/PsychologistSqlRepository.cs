@@ -9,6 +9,9 @@ namespace iPractice.Api.Repositories;
 
 public class PsychologistSqlRepository(ApplicationDbContext dbContext) : IPsychologistSqlRepository
 {
+    
+    public async Task<List<long>> GetAllPsychologistIdsAsync(CancellationToken cancellationToken) =>
+        await dbContext.Psychologists.Select(p => p.Id).ToListAsync(cancellationToken);
     public async Task<Psychologist> GetPsychologistByIdAsync(long id, CancellationToken cancellationToken)
     {
         var psychologist = await dbContext.Psychologists.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);

@@ -6,12 +6,12 @@ namespace iPractice.Api.Models.Clients;
 public class Client : Entity
 {
     public string Name { get; private set; }
-    public Calendar Calendar { get; } = Calendar.Empty();
+    public Calendar Calendar { get; } = Calendar.Empty(); 
     public PsychologistAssignment PsychologistAssignment { get; }
 
     private Client()
     {
-
+        PsychologistAssignment = PsychologistAssignment.InitializeFrom(new List<long>());
     }
 
     private Client(string name, PsychologistAssignment psychologistAssignment)

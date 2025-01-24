@@ -7,25 +7,42 @@ using System.Linq;
 
 namespace iPractice.Api;
 
-public class SeedData(ApplicationDbContext context)
+public class SeedData
 {
     private const int NumberOfPsychologists = 20;
     private const int NumberOfClients = 50;
+    private readonly ApplicationDbContext context;
     private readonly List<InitialApplicationData> initialApplicationData = Generate();
+
+    public SeedData(ApplicationDbContext context)
+    {
+        this.context = context;
+    }
 
     public void Seed()
     {
+        // Clear existing data
         context.Database.ExecuteSqlRaw("DELETE FROM AvailableTimeSlotsOfPsychologists");
         context.Database.ExecuteSqlRaw("DELETE FROM BookedAppointmentsOfPsychologists");
         context.Database.ExecuteSqlRaw("DELETE FROM Psychologists");
-
         context.Database.ExecuteSqlRaw("DELETE FROM ClientScheduledAppointments");
         context.Database.ExecuteSqlRaw("DELETE FROM Clients");
 
+        // Add psychologists and save to ensure IDs are generated
+        var psychologists = CreatePsychologists();
+        context.Psychologists.AddRange(psychologists);
+        context.SaveChanges(); 
+
+        // Add clients and save to ensure IDs are generated
         var clients = CreateClients();
         context.Clients.AddRange(clients);
-        context.Psychologists.AddRange(CreatePsychologists());
-        context.SaveChanges();
+        context.SaveChanges(); 
+        
+        //  Populate related tables
+        //  AddAvailableTimeSlots(psychologists);
+        //  AddBookedAppointments(psychologists, clients);
+
+        context.SaveChanges(); 
     }
 
     private IEnumerable<Client> CreateClients()
@@ -34,7 +51,7 @@ public class SeedData(ApplicationDbContext context)
             .OrderBy(x => x.ClientId)
             .Select((data, i) =>
             {
-                return Client.Create($"Client {i + 1}", [data.PsychologistId1, data.PsychologistId2]);
+                return Client.Create($"Client {i + 1}", new List<long> { data.PsychologistId1, data.PsychologistId2 });
             });
     }
 
@@ -52,7 +69,6 @@ public class SeedData(ApplicationDbContext context)
                 return Psychologist.Create($"Psychologist {psychologistId}", clients.ToList());
             });
     }
-
     private static List<InitialApplicationData> Generate()
     {
         return Enumerable

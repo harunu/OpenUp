@@ -19,11 +19,14 @@ public class CreateNewAvailableTimeSlotHandler(IPsychologistSqlRepository psycho
     public async Task<Psychologist> Handle(CreateNewAvailableTimeSlotCommand request, CancellationToken cancellationToken)
     {
         var psychologist = await psychologistSqlRepository.GetPsychologistByIdAsync(request.PsychologistId, cancellationToken);
-
-        psychologist.AddAvailableTimeSlot(new AvailableTimeSlot(request.From, request.To));
-
+        if (psychologist == null)
+        {
+            throw new InvalidOperationException($"Psychologist with ID {request.PsychologistId} not found.");
+        }
+        // Add the available time slot to the psychologist
+        var newTimeSlot = new AvailableTimeSlot(request.From, request.To, psychologist.Id);
+        psychologist.AddAvailableTimeSlot(newTimeSlot);
         await psychologistSqlRepository.SaveChangesAsync(cancellationToken);
-
         return psychologist;
     }
 }

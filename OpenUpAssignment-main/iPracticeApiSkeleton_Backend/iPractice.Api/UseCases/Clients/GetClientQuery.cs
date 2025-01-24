@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace iPractice.Api.UseCases.Clients;
 
-public class GetClientQuery(long clientId) : IRequest<Client>
+public class GetClientQuery : IRequest<Client>
 {
-    public long ClientId { get; } = clientId;
+    public long ClientId { get; }
+    public GetClientQuery(long clientId) => ClientId = clientId;
 }
 
-public class GetClientHandler(IClientSqlRepository clientSqlRepository) : IRequestHandler<GetClientQuery, Client>
+public class GetClientHandler : IRequestHandler<GetClientQuery, Client>
 {
-    public async Task<Client> Handle(GetClientQuery request, CancellationToken cancellationToken) =>
-        await clientSqlRepository.GetClientByIdAsync(request.ClientId, cancellationToken);
+    private readonly IClientSqlRepository _repository;
+
+    public GetClientHandler(IClientSqlRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<Client> Handle(GetClientQuery request, CancellationToken cancellationToken)
+    {
+        return await _repository.GetClientByIdAsync(request.ClientId, cancellationToken);
+    }
 }

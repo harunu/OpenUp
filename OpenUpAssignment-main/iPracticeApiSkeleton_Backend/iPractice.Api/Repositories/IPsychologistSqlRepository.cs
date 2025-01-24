@@ -14,4 +14,7 @@ public interface IPsychologistSqlRepository
     Task DeletePsychologistAsync(Psychologist psychologist, CancellationToken cancellationToken);
 
     Task SaveChangesAsync(CancellationToken cancellationToken);
+    
+    Task<List<long>> GetAllPsychologistIdsAsync(CancellationToken cancellationToken);
+
 }

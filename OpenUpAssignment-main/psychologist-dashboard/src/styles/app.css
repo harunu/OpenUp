@@ -1,0 +1,194 @@
+/* General Styling */
+body {
+  font-family: "Arial, sans-serif";
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 28px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+}
+
+.psychologist-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.psychologist-select select {
+  padding: 12px;
+  font-size: 16px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+  transition: border-color 0.3s;
+}
+
+.psychologist-select select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.psychologist-select button {
+  padding: 10px 25px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.psychologist-select button:hover {
+  background-color: #0056b3;
+}
+
+/* Card Styling */
+.availability-card {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.availability-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.availability-card h3 {
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  border-bottom: 2px solid #007bff;
+}
+
+.upcoming-sessions {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upcoming-sessions h3 {
+  font-size: 18px;
+  margin: 0 0 15px;
+  border-bottom: 2px solid #007bff;
+}
+
+.upcoming-sessions ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.upcoming-sessions li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.upcoming-sessions li:last-child {
+  border-bottom: none;
+}
+
+.upcoming-sessions button {
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.upcoming-sessions button:hover {
+  background-color: #c0392b;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.no-availability {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 600px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.no-availability p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  margin: 0;
+}
+.no-sessions p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  margin: 0;
+}
+
+
+.sessions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.sessions-table th,
+.sessions-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.sessions-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sessions-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.no-sessions {
+  text-align: center;
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #555;
+}

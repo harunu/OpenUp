@@ -4,20 +4,21 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace iPractice.Api.Repositories;
-
 public class ClientSqlRepository(ApplicationDbContext dbContext) : IClientSqlRepository
 {
     public async Task<Client> GetClientByIdAsync(long id, CancellationToken cancellationToken)
     {
-        var psychologist = await dbContext.Clients.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
-        return psychologist;
+        // Include related navigation properties
+        return await dbContext.Clients
+            .Include(c => c.Calendar)
+            .Include(c => c.PsychologistAssignment)
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<Client> AddClientAsync(Client client, CancellationToken cancellationToken)
     {
         await dbContext.Clients.AddAsync(client, cancellationToken);
         await SaveChangesAsync(cancellationToken);
-
         return client;
     }
 

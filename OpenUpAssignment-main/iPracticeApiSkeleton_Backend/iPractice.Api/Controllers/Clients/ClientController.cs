@@ -33,6 +33,11 @@ public class ClientController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<ClientDetailsDto>> GetClient([FromRoute] long id)
     {
         var client = await mediator.Send(new GetClientQuery(id));
+        if (client == null)
+        {
+            return NotFound(new { Message = "Client not found", ClientId = id });
+        }
+
         return Ok(ClientDetailsDto.From(client));
     }
 
@@ -46,6 +51,11 @@ public class ClientController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<List<AvailableTimeSlotsResult>>> GetAvailableTimeSlots([FromRoute] long id)
     {
         var availableTimeSlots = await mediator.Send(new GetAvailableTimeSlotsQuery(id));
+        if (availableTimeSlots == null || availableTimeSlots.Count == 0)
+        {
+            return NotFound(new { Message = "No available time slots found for the client", ClientId = id });
+        }
+
         return Ok(availableTimeSlots);
     }
 
@@ -59,6 +69,11 @@ public class ClientController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<Appointment>> BookAppointment([FromRoute] long id, [FromBody] CreateBookingDto data)
     {
         var appointment = await mediator.Send(new BookAppointmentCommand(id, data.PsychologistId, data.AvailableTimeSlotId));
+        if (appointment == null)
+        {
+            return BadRequest(new { Message = "Failed to create appointment. Ensure the time slot is valid.", ClientId = id });
+        }
+
         return Ok(appointment);
     }
 
@@ -71,7 +86,13 @@ public class ClientController(IMediator mediator) : ControllerBase
     [HttpDelete("{id}/bookings/{appointmentId}")]
     public async Task<ActionResult> CancelAppointment([FromRoute] long id, [FromRoute] string appointmentId)
     {
-        await mediator.Send(new CancelAppointmentCommand(id, appointmentId));
+        var result = await mediator.Send(new CancelAppointmentCommand(id, appointmentId));
+        if (!result)
+        {
+            return NotFound(new { Message = "Appointment not found or could not be canceled", AppointmentId = appointmentId });
+        }
+
         return NoContent();
     }
+
 }
