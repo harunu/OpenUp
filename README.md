@@ -89,7 +89,7 @@ Use Swagger UI to test and verify API endpoints:
 
 Access Swagger at 
 ```http 
-http://localhost:5001/swagger.
+http://localhost:5001/swagger
 ```
 ## Known Limitations
 Automatic client booking through the frontend is not yet implemented. However, you can manually select a valid ClientId from the database and create bookings using the POST /Client/{id}/bookings endpoint.
